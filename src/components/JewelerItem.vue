@@ -17,6 +17,7 @@
           handleMouseDown(e);
         }
       "
+      @mousemove="handleMouseMove2(e)"
       :style="classObject"
       class="jeweler container transform-component"
     >
@@ -386,18 +387,41 @@ export default ({
 
   methods: {
   handleMouseMove(e) {
-      let finalX = e.pageX - this.a - this.scaleNumber.locationInitialX
-      let finalY = e.pageY - this.b - this.scaleNumber.locationInitialY;
+    let finalX = 0
+    let finalY = 0
+    // console.log(this.a)
+    // console.log(e.pageX)
     if (this.isMouseDown) {
-      this.classObject = {
-        transform: `scale(${this.scaleNumber.x}, ${this.scaleNumber.y}) translate(${finalX}px, ${finalY}px)`,
-      };
+      if(window.innerWidth > 1600){
+        finalX = e.pageX - this.a - this.scaleNumber.locationInitialX
+        finalY = e.pageY - this.b - this.scaleNumber.locationInitialY;
+        this.classObject = {
+          transform: `scale(${this.scaleNumber.x}, ${this.scaleNumber.y}) translate(${finalX}px, ${finalY}px)`,
+        };
+      }
+      else{
+        finalX = e.pageX - this.scaleNumber.locationInitialX + 90
+          
+        finalY = e.pageY - this.scaleNumber.locationInitialY - 170;
+          
+         this.classObject = {
+          transform: `scale(${this.scaleNumber.x}, ${this.scaleNumber.y}) translate(${finalX}px, ${finalY}px)`,
+        };
+      }
     } else {
-      this.classObject = {
+      if(window.innerWidth > 1600){
+        this.classObject = {
         transform: `scale(${this.scaleNumber.x}, ${this.scaleNumber.y})`,
         transition: "transform 1.5s",
         };
       }
+      }
+  },
+
+  handleMouseMove2(e){
+    if(window.innerWidth < 1600 && this.isMouseDown === true){
+      // this.a = e.target.getBoundingClientRect().left;
+    }
   },
 
   handleMouseDown(e) { 
