@@ -397,7 +397,7 @@ export default({
     function handleMove(e){
       console.log(e.touches[0].pageY - this.d)
       if (this.isMouseDown) {
-        if(e.touches[0].pageX - this.c < 100 && e.touches[0].pageX - this.c > -1500 && e.touches[0].pageY - this.d > -1200 && e.touches[0].pageY - this.d < 700){
+        if(e.touches[0].pageX - this.c < 100 && e.touches[0].pageX - this.c > -1500 && e.touches[0].pageY - this.d > -800 && e.touches[0].pageY - this.d < 400){
           handle_mobile.style.left = `${e.touches[0].pageX - this.c}px`
           handle_mobile.style.top = `${e.touches[0].pageY - this.d}px`
         }
