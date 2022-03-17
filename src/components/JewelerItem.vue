@@ -1,10 +1,5 @@
 <template>
   <div class="container-jeweler" 
-    @mousemove="
-      (e) => {
-        handleMouseMove(e);
-      }
-    "
     @mouseup="
       (e) => {
         handleMouseUp(e);
@@ -12,14 +7,19 @@
     "
   >
     <div
-    @mousedown="
+      @mousemove="
+        (e) => {
+          handleMouseMove(e);
+        }
+      "
+      @mousedown="
         (e) => {
           handleMouseDown(e);
         }
       "
-      @mousemove="handleMouseMove2(e)"
       :style="classObject"
       class="jeweler container transform-component"
+      id="handle_mobile"
     >
       <!-- Manager -->
       <div class="info-manage">
@@ -361,10 +361,8 @@
   </div>
 </template>
 <script>
-// import Vue from 'vue'
-export default ({
+export default({
   name: 'JewelerItem',
-
   data() {
     return {
       scaleNumber: {
@@ -385,12 +383,29 @@ export default ({
       };
   },
 
+  mounted(){ 
+    console.log(this.c)
+    var el = document.getElementById("handle_mobile");
+    el.addEventListener("touchstart", handleStart, false);
+    el.addEventListener("touchmove", handleMove, false);
+    function handleStart(e){
+      this.isMouseDown = true;
+      this.c = e.touches[0].clientX - e.touches[0].target.getBoundingClientRect().left;
+      this.d = e.touches[0].clientY - e.touches[0].target.getBoundingClientRect().top;
+    }
+
+    function handleMove(e){
+      if (this.isMouseDown) {
+        handle_mobile.style.left = `${e.touches[0].pageX - this.c}px`
+        handle_mobile.style.top = `${e.touches[0].pageY - this.d}px`
+      } 
+    }
+  },
+
   methods: {
   handleMouseMove(e) {
     let finalX = 0
     let finalY = 0
-    // console.log(this.a)
-    // console.log(e.pageX)
     if (this.isMouseDown) {
       if(window.innerWidth > 1600){
         finalX = e.pageX - this.a - this.scaleNumber.locationInitialX
@@ -400,37 +415,35 @@ export default ({
         };
       }
       else{
-        finalX = e.pageX - this.scaleNumber.locationInitialX + 90
-          
-        finalY = e.pageY - this.scaleNumber.locationInitialY - 170;
-          
-         this.classObject = {
-          transform: `scale(${this.scaleNumber.x}, ${this.scaleNumber.y}) translate(${finalX}px, ${finalY}px)`,
-        };
+        this.classObject = {
+          left: `${e.pageX - this.c}px`,
+          top: `${e.pageY - this.d}px`
+        }
       }
-    } else {
+    } 
+    else {
       if(window.innerWidth > 1600){
         this.classObject = {
-        transform: `scale(${this.scaleNumber.x}, ${this.scaleNumber.y})`,
+        transform: `scale(${this.scaleNumber.x}, ${this.scaleNumber.y}) translate(${0}px, ${0}px)`,
         transition: "transform 1.5s",
         };
       }
       }
   },
 
-  handleMouseMove2(e){
-    if(window.innerWidth < 1600 && this.isMouseDown === true){
-      // this.a = e.target.getBoundingClientRect().left;
+  handleMouseDown(e) { 
+    this.isMouseDown = true;
+    if(window.innerWidth > 1600){
+      this.a = e.target.getBoundingClientRect().left;
+      this.b = e.target.getBoundingClientRect().top;
+      this.scaleNumber.locationInitialX = e.offsetX;
+      this.scaleNumber.locationInitialY = e.offsetY;
+    }
+    else{
+      this.c = e.clientX - e.target.getBoundingClientRect().left;
+      this.d = e.clientY - e.target.getBoundingClientRect().top;
     }
   },
-
-  handleMouseDown(e) { 
-    this.a = e.target.getBoundingClientRect().left;
-    this.b = e.target.getBoundingClientRect().top;
-    this.isMouseDown = true;
-    this.scaleNumber.locationInitialX = e.offsetX;
-    this.scaleNumber.locationInitialY = e.offsetY;
-    },
   handleMouseUp() {
     this.isMouseDown = false;
   },
