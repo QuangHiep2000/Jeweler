@@ -395,9 +395,12 @@ export default({
     }
 
     function handleMove(e){
+      console.log(e.touches[0].pageY - this.d)
       if (this.isMouseDown) {
-        handle_mobile.style.left = `${e.touches[0].pageX - this.c}px`
-        handle_mobile.style.top = `${e.touches[0].pageY - this.d}px`
+        if(e.touches[0].pageX - this.c < 200 && e.touches[0].pageX - this.c > -1500 && e.touches[0].pageY - this.d > -1000 && e.touches[0].pageY - this.d < 500){
+          handle_mobile.style.left = `${e.touches[0].pageX - this.c}px`
+          handle_mobile.style.top = `${e.touches[0].pageY - this.d}px`
+        }
       } 
     }
   },
@@ -407,7 +410,7 @@ export default({
     let finalX = 0
     let finalY = 0
     if (this.isMouseDown) {
-      if(window.innerWidth > 1600){
+      if(window.innerWidth > 1700){
         finalX = e.pageX - this.a - this.scaleNumber.locationInitialX
         finalY = e.pageY - this.b - this.scaleNumber.locationInitialY;
         this.classObject = {
@@ -415,14 +418,16 @@ export default({
         };
       }
       else{
-        this.classObject = {
+        if(e.pageX - this.c < 500 && e.pageX - this.c > -500 && e.pageY - this.d > -500 && e.pageY - this.d < 500){
+          this.classObject = {
           left: `${e.pageX - this.c}px`,
           top: `${e.pageY - this.d}px`
+        }
         }
       }
     } 
     else {
-      if(window.innerWidth > 1600){
+      if(window.innerWidth > 1700){
         this.classObject = {
         transform: `scale(${this.scaleNumber.x}, ${this.scaleNumber.y}) translate(${0}px, ${0}px)`,
         transition: "transform 1.5s",
@@ -433,7 +438,7 @@ export default({
 
   handleMouseDown(e) { 
     this.isMouseDown = true;
-    if(window.innerWidth > 1600){
+    if(window.innerWidth > 1700){
       this.a = e.target.getBoundingClientRect().left;
       this.b = e.target.getBoundingClientRect().top;
       this.scaleNumber.locationInitialX = e.offsetX;
